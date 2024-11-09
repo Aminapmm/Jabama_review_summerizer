@@ -11,7 +11,9 @@ persian_months = ['فروردین','اردیبهشت','خرداد','تیر','م�
 def scrape_page(URL="") -> dict:
     if URL == "":
         return "enter a valid url"
+    proxies = {'http':'http://185.172.214.112:80'}
     ses = requests.Session()
+    ses.proxies.update(proxies)
     res = ses.get(url=URL)
     hotel = {}
     place= bs(res.content.decode('utf-8'),features='lxml')
