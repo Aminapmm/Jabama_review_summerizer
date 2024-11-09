@@ -49,4 +49,4 @@ def generate_wordcloud(df:pd.DataFrame):
     wpercent = (base_width / float(img.size[0]))
     hsize = int((float(img.size[1]) * float(wpercent)))
     img = img.resize((base_width, hsize), Image.Resampling.LANCZOS)
-    st.image(np.array(img),width=450)
+    st.image(np.array(img),use_container_width=True)

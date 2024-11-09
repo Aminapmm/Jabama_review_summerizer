@@ -127,10 +127,11 @@ def get_review_summary(reviews:str):
         cust_review_summary = small_reviews_summary(reviews)
         cust_review_summary_map = "N.A."
         cust_review_summary_refine = "N.A."
+        return cust_review_summary
     else:
         split_docs = document_split(reviews, 2000, 50)
         #cust_review_summary_map = map_reduce_summary(split_docs)
-        cust_review_summary_refine = refine_method_summary(split_docs)
+        cust_review_summary_refine = refine_method_summary(split_docs)['output_text']
         cust_review_summary = "N.A."
+        return cust_review_summary_refine
     
-    return cust_review_summary['text']

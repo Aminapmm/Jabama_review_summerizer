@@ -12,8 +12,8 @@ import json
 grid_options = {
     'autoSizeStrategy':{
         'type':'fitGridWidth',
-    },
-    'columnDefs':[{'field':'comment','headerName':"نظرات",'width':200,'enableRangeSelection':True,'checkboxSelection':True,'rowSelection':"multiple"},
+    },'columnLimits':[{'colId':'comment','minWidth':800}],
+    'columnDefs':[{'field':'comment','headerName':"نظرات",'enableRangeSelection':True,'checkboxSelection':True,'rowSelection':"multiple"},
                   {'field':"month",'headerName':"ماه",'width':50,'enableRowGroup':True,'enableRangeSelction':True,'rowSelection':"multiple"},
                   {'field':"year",'headerName':"سال",'width':50,'enableRowGroup':True,'rowSelection':"multiple"}]
                   ,'rowGroupPanelShow':'always',
@@ -55,7 +55,7 @@ def table(hotel:dict):
 
     summary = ""
     reviews = ""
-    selected_reviews = df
+    selected_reviews = pd.DataFrame()
     with tab1:
         col1,col2 = st.columns(2,gap='medium')
         with col1:
@@ -67,23 +67,23 @@ def table(hotel:dict):
 
     with tab2:
         ag = AgGrid(df,grid_options,data_return_mode = DataReturnMode.FILTERED_AND_SORTED,update_mode = GridUpdateMode.SELECTION_CHANGED)
-        selected_reviews = ag.selected_data
+        reviews = " ".join(df['comment'].to_list())
 
         if st.button(label="اعمال تغییرات"):
-            reviews = " ".join(df['comment'].to_list())
+            selected_reviews = ag.selected_data
 
     
     with tab3:
-
-        selected_reviews_grid = AgGrid(selected_reviews,{'autoSizeStrategy':{'type':'fitGridWidth'},'columnDefs':[{'field':'comment','headerName':"نظرات",'width':500}],'alwaysShowHorizontalScroll' : True})
-        reviews = " ".join(selected_reviews['comment'].to_list())
+        selected_reviews_grid = AgGrid(selected_reviews,{'autoSizeStrategy':{'type':'fitCellContents'},'columnDefs':[{'field':'comment','headerName':"نظرات",'width':500}],'alwaysShowHorizontalScroll' : True})
+        if not selected_reviews.empty:
+            reviews = " ".join(selected_reviews['comment'].to_list())
             
         if st.button("خلاصه کن"):
+            print(reviews)
             summary = get_review_summary(reviews)
                 
         st.header("در این قسمت می‌توانید خلاصه‌نظرات را مطالعه کنید")
         message = st.chat_message('ai')
-        #message.write("here is your summary")
         message.write(summary)
 
     
